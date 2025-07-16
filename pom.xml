@@ -40,10 +40,10 @@
 	<modules>
 		<module>openid-connect-common</module>
 		<module>openid-connect-client</module>
-		<module>openid-connect-server</module>
+		<!--<module>openid-connect-server</module>
 		<module>openid-connect-server-webapp</module>
 		<module>uma-server</module>
-		<module>uma-server-webapp</module>
+		<module>uma-server-webapp</module>-->
 	</modules>
 
 	<scm>
@@ -70,7 +70,7 @@
 	</mailingLists>
 
 	<properties>
-		<java-version>1.8</java-version>
+		<java-version>21</java-version>
 		<org.slf4j-version>1.7.25</org.slf4j-version>
 	</properties>
 	<description>A reference implementation of OpenID Connect (http://openid.net/connect/), OAuth 2.0, and UMA built on top of Java, Spring, and Spring Security. The project contains a fully functioning server, client, and utility library.</description>
@@ -282,71 +282,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
-				<configuration>
-					<reportPlugins>
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-project-info-reports-plugin</artifactId>
-							<configuration>
-								<dependencyDetailsEnabled>false</dependencyDetailsEnabled>
-								<dependencyLocationsEnabled>false</dependencyLocationsEnabled>
-							</configuration>
-							<reports>
-								<report>index</report>
-								<report>cim</report>
-								<report>dependencies</report>
-								<report>dependency-convergence</report>
-<!-- 								<report>dependency-info</report> -->
-								<report>dependency-management</report>
-								<report>help</report>
-								<report>issue-tracking</report>
-								<report>license</report>
-								<report>mailing-list</report>
-								<report>modules</report>
-								<report>plugin-management</report>
-								<report>plugins</report>
-								<report>project-team</report>
-								<report>scm</report>
-								<report>summary</report>
-							</reports>
-						</plugin>
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-javadoc-plugin</artifactId>
-							<configuration>
-								<author>true</author>
-								<version>true</version>
-								<use>true</use>
-								<linksource>true</linksource>
-								<windowtitle>MITREid Connect ${project.name} v. ${project.version}</windowtitle>
-								<doctitle>MITREid Connect ${project.name} v. ${project.version}</doctitle>
-								<overview>${basedir}/src/main/javadoc/overview.html</overview>
-								<additionalparam>-Xdoclint:none</additionalparam>
-							</configuration>
-						</plugin>
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-checkstyle-plugin</artifactId>
-							<configuration>
-								<configLocation>checkstyle.xml</configLocation>
-							</configuration>
-						</plugin>
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-surefire-plugin</artifactId>
-							<configuration>
-								<junitArtifactName>junit:junit</junitArtifactName>
-								<excludes>
-									<exclude>**/*_Roo_*</exclude>
-								</excludes>
-							</configuration>
-						</plugin>
-						<plugin>
-							<groupId>org.jacoco</groupId>
-							<artifactId>jacoco-maven-plugin</artifactId>
-						</plugin>
-					</reportPlugins>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>
@@ -365,53 +300,48 @@
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-framework-bom</artifactId>
-				<version>4.3.22.RELEASE</version>
+				<version>6.0.15</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
 
-			<!-- Jackson -->
 			<dependency>
-				<groupId>com.fasterxml.jackson.core</groupId>
-				<artifactId>jackson-databind</artifactId>
-				<version>2.9.8</version>
-			</dependency>
-			<dependency>
-				<groupId>com.fasterxml.jackson.core</groupId>
-				<artifactId>jackson-annotations</artifactId>
-				<version>2.9.8</version>
+				<groupId>jakarta.annotation</groupId>
+				<artifactId>jakarta.annotation-api</artifactId>
+				<version>3.0.0</version>
 			</dependency>
 
 			<!-- Spring Security -->
 			<dependency>
 				<groupId>org.springframework.security</groupId>
 				<artifactId>spring-security-bom</artifactId>
-				<version>4.2.11.RELEASE</version>
+				<version>6.0.8</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
 			<dependency>
-				<groupId>org.springframework.security.oauth</groupId>
-				<artifactId>spring-security-oauth2</artifactId>
-				<version>2.1.0.RELEASE</version>
+				<groupId>org.springframework.security</groupId>
+				<artifactId>spring-security-oauth2-client</artifactId>
+				<version>6.0.8</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.security</groupId>
+				<artifactId>spring-security-oauth2-resource-server</artifactId>
+				<version>6.0.8</version>
 			</dependency>
 
 			<!-- Servlet -->
+
 			<dependency>
-				<groupId>javax.servlet</groupId>
-				<artifactId>jstl</artifactId>
-				<version>1.2</version>
-			</dependency>
-			<dependency>
-				<groupId>javax.servlet</groupId>
-				<artifactId>servlet-api</artifactId>
-				<version>2.5</version>
+				<groupId>jakarta.servlet</groupId>
+				<artifactId>jakarta.servlet-api</artifactId>
+				<version>6.0.0</version>
 				<scope>provided</scope>
 			</dependency>
 			<dependency>
-				<groupId>javax.servlet.jsp</groupId>
-				<artifactId>jsp-api</artifactId>
-				<version>2.1</version>
+				<groupId>jakarta.servlet.jsp</groupId>
+				<artifactId>jakarta.servlet.jsp-api</artifactId>
+				<version>3.1.1</version>
 				<scope>provided</scope>
 			</dependency>
 
@@ -442,9 +372,9 @@
 				<version>2.7.4</version>
 			</dependency>
 			<dependency>
-				<groupId>org.eclipse.persistence</groupId>
-				<artifactId>javax.persistence</artifactId>
-				<version>2.2.1</version>
+				<groupId>jakarta.persistence</groupId>
+				<artifactId>jakarta.persistence-api</artifactId>
+				<version>3.2.0</version>
 			</dependency>
 			<dependency>
 				<groupId>com.zaxxer</groupId>
@@ -572,9 +502,9 @@
 				<version>2.8.0</version>
 			</dependency>
 			<dependency>
-				<groupId>org.apache.httpcomponents</groupId>
-				<artifactId>httpclient</artifactId>
-				<version>4.5.3</version>
+				<groupId>org.apache.httpcomponents.client5</groupId>
+				<artifactId>httpclient5</artifactId>
+				<version>5.4.4</version>
 				<exclusions>
 					<exclusion>
 						<groupId>commons-logging</groupId>
@@ -643,12 +573,12 @@
 			<artifactId>jcl-over-slf4j</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
+			<groupId>jakarta.servlet</groupId>
+			<artifactId>jakarta.servlet-api</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>javax.servlet.jsp</groupId>
-			<artifactId>jsp-api</artifactId>
+			<groupId>jakarta.servlet.jsp</groupId>
+			<artifactId>jakarta.servlet.jsp-api</artifactId>
 		</dependency>
 	</dependencies>
 

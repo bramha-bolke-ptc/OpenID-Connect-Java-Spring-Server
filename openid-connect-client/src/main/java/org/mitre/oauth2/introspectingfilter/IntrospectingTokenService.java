@@ -28,8 +28,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.http.client.HttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.hc.client5.http.classic.HttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.mitre.oauth2.introspectingfilter.service.IntrospectionAuthorityGranter;
 import org.mitre.oauth2.introspectingfilter.service.IntrospectionConfigurationService;
 import org.mitre.oauth2.introspectingfilter.service.impl.SimpleIntrospectionAuthorityGranter;

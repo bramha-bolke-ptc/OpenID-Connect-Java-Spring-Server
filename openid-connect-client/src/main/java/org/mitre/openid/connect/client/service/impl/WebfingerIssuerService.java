@@ -24,11 +24,11 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.hc.client5.http.classic.HttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.core5.net.URIBuilder;
 import org.mitre.discovery.util.WebfingerURLNormalizer;
 import org.mitre.openid.connect.client.model.IssuerServiceResponse;
 import org.mitre.openid.connect.client.service.IssuerService;

@@ -20,8 +20,7 @@
  */
 package org.mitre.openid.connect.client.service.impl;
 
-import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.mitre.openid.connect.client.model.IssuerServiceResponse;
 import org.mitre.openid.connect.client.service.IssuerService;

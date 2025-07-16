@@ -23,9 +23,9 @@ import java.net.URISyntaxException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.hc.client5.http.classic.HttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.core5.net.URIBuilder;
 import org.mitre.openid.connect.config.ServerConfiguration;
 import org.mitre.openid.connect.config.ServerConfiguration.UserInfoTokenMethod;
 import org.mitre.openid.connect.model.DefaultUserInfo;

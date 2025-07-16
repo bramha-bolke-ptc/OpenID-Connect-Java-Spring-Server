@@ -24,7 +24,7 @@ import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.http.client.utils.URIBuilder;
+import org.apache.hc.core5.net.URIBuilder;
 import org.mitre.jwt.signer.service.JWTSigningAndValidationService;
 import org.mitre.oauth2.model.RegisteredClient;
 import org.mitre.openid.connect.client.service.AuthRequestUrlBuilder;

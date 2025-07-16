@@ -22,7 +22,7 @@ package org.mitre.openid.connect.client.service.impl;
 
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 import org.mitre.openid.connect.client.service.ServerConfigurationService;
 import org.mitre.openid.connect.config.ServerConfiguration;

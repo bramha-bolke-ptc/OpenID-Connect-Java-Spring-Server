@@ -21,7 +21,6 @@ import java.util.Date;
 
 import org.mitre.oauth2.model.ClientDetailsEntity;
 import org.mitre.oauth2.model.OAuth2AccessTokenEntity;
-import org.springframework.security.oauth2.provider.OAuth2Request;
 
 import com.nimbusds.jwt.JWT;
 

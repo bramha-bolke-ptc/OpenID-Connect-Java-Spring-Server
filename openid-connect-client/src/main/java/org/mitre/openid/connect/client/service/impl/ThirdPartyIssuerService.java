@@ -24,10 +24,9 @@ import java.net.URISyntaxException;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.annotation.PostConstruct;
 
-import org.apache.http.client.utils.URIBuilder;
+import org.apache.hc.core5.net.URIBuilder;
 import org.mitre.openid.connect.client.model.IssuerServiceResponse;
 import org.mitre.openid.connect.client.service.IssuerService;
 import org.springframework.security.authentication.AuthenticationServiceException;

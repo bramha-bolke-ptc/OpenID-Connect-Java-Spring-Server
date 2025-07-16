@@ -22,8 +22,8 @@ import java.util.Set;
 import org.mitre.oauth2.exception.DeviceCodeCreationException;
 import org.mitre.oauth2.model.ClientDetailsEntity;
 import org.mitre.oauth2.model.DeviceCode;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.provider.ClientDetails;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
 
 /**
  * @author jricher
@@ -41,7 +41,7 @@ public interface DeviceCodeService {
 	 * @param dc
 	 * @param o2Auth
 	 */
-	public DeviceCode approveDeviceCode(DeviceCode dc, OAuth2Authentication o2Auth);
+	public DeviceCode approveDeviceCode(DeviceCode dc, Authentication o2Auth);
 
 	/**
 	 * @param deviceCode

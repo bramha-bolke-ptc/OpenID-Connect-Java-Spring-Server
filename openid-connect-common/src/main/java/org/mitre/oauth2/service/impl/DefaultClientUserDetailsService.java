@@ -33,10 +33,10 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.oauth2.common.exceptions.InvalidClientException;
 import org.springframework.stereotype.Service;
 
 import com.google.common.base.Strings;
+import com.nimbusds.oauth2.sdk.auth.verifier.InvalidClientException;
 
 /**
  * Shim layer to convert a ClientDetails service into a UserDetails service

@@ -22,8 +22,8 @@ package org.mitre.openid.connect.web;
 
 import java.lang.reflect.Type;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.mitre.openid.connect.model.OIDCAuthenticationToken;
 import org.mitre.openid.connect.model.UserInfo;
@@ -34,7 +34,6 @@ import org.springframework.security.authentication.AuthenticationTrustResolverIm
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

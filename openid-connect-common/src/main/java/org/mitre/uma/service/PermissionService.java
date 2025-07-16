@@ -20,7 +20,6 @@ import java.util.Set;
 
 import org.mitre.uma.model.PermissionTicket;
 import org.mitre.uma.model.ResourceSet;
-import org.springframework.security.oauth2.common.exceptions.InsufficientScopeException;
 
 
 /**

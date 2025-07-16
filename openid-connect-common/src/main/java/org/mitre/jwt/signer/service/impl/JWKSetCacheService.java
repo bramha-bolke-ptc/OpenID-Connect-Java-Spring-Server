@@ -23,8 +23,8 @@ package org.mitre.jwt.signer.service.impl;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.http.client.HttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.hc.client5.http.classic.HttpClient;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.mitre.jose.keystore.JWKSetKeyStore;
 import org.mitre.jwt.encryption.service.JWTEncryptionAndDecryptionService;
 import org.mitre.jwt.encryption.service.impl.DefaultJWTEncryptionAndDecryptionService;

@@ -20,9 +20,9 @@
  */
 package org.mitre.openid.connect.client.service;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.mitre.openid.connect.client.model.IssuerServiceResponse;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  *

@@ -25,36 +25,32 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import javax.persistence.Basic;
-import javax.persistence.CascadeType;
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.Transient;
+import jakarta.persistence.Basic;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.Transient;
 
 import org.mitre.oauth2.model.convert.JWTStringConverter;
 import org.mitre.openid.connect.model.ApprovedSite;
 import org.mitre.uma.model.Permission;
-import org.springframework.security.oauth2.common.OAuth2AccessToken;
-import org.springframework.security.oauth2.common.OAuth2AccessTokenJackson1Deserializer;
-import org.springframework.security.oauth2.common.OAuth2AccessTokenJackson1Serializer;
-import org.springframework.security.oauth2.common.OAuth2AccessTokenJackson2Deserializer;
-import org.springframework.security.oauth2.common.OAuth2AccessTokenJackson2Serializer;
-import org.springframework.security.oauth2.common.OAuth2RefreshToken;
+import org.springframework.security.oauth2.core.OAuth2AccessToken;
+import org.springframework.security.oauth2.core.OAuth2RefreshToken;
 
 import com.nimbusds.jwt.JWT;
 
@@ -74,10 +70,7 @@ import com.nimbusds.jwt.JWT;
 	@NamedQuery(name = OAuth2AccessTokenEntity.QUERY_BY_RESOURCE_SET, query = "select a from OAuth2AccessTokenEntity a join a.permissions p where p.resourceSet.id = :" + OAuth2AccessTokenEntity.PARAM_RESOURCE_SET_ID),
 	@NamedQuery(name = OAuth2AccessTokenEntity.QUERY_BY_NAME, query = "select r from OAuth2AccessTokenEntity r where r.authenticationHolder.userAuth.name = :" + OAuth2AccessTokenEntity.PARAM_NAME)
 })
-@org.codehaus.jackson.map.annotate.JsonSerialize(using = OAuth2AccessTokenJackson1Serializer.class)
-@org.codehaus.jackson.map.annotate.JsonDeserialize(using = OAuth2AccessTokenJackson1Deserializer.class)
-@com.fasterxml.jackson.databind.annotation.JsonSerialize(using = OAuth2AccessTokenJackson2Serializer.class)
-@com.fasterxml.jackson.databind.annotation.JsonDeserialize(using = OAuth2AccessTokenJackson2Deserializer.class)
+
 public class OAuth2AccessTokenEntity implements OAuth2AccessToken {
 
 	public static final String QUERY_BY_APPROVED_SITE = "OAuth2AccessTokenEntity.getByApprovedSite";
@@ -199,7 +192,7 @@ public class OAuth2AccessTokenEntity implements OAuth2AccessToken {
 
 	@Override
 	@Basic
-	@Temporal(javax.persistence.TemporalType.TIMESTAMP)
+	@Temporal(jakarta.persistence.TemporalType.TIMESTAMP)
 	@Column(name = "expiration")
 	public Date getExpiration() {
 		return expiration;

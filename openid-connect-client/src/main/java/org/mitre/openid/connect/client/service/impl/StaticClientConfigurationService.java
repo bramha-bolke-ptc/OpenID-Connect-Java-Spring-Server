@@ -58,7 +58,7 @@ public class StaticClientConfigurationService implements ClientConfigurationServ
 	/**
 	 * Get the client configured for this issuer
 	 *
-	 * @see org.mitre.openid.connect.client.service.ClientConfigurationService#getClientConfiguration(java.lang.String)
+	 * @see org.mitre.openid.connect.client.service.ClientConfigurationService#getClientConfiguration(ServerConfiguration)
 	 */
 	@Override
 	public RegisteredClient getClientConfiguration(ServerConfiguration issuer) {
