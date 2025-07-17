@@ -26,8 +26,6 @@ import java.util.concurrent.ExecutionException;
 
 import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
-import org.apache.http.client.HttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.mitre.oauth2.model.RegisteredClient;
 import org.mitre.openid.connect.ClientDetailsEntityJsonProcessor;
 import org.mitre.openid.connect.client.service.ClientConfigurationService;
@@ -41,8 +39,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.security.authentication.AuthenticationServiceException;
-import org.springframework.security.oauth2.common.OAuth2AccessToken;
-import org.springframework.security.oauth2.common.exceptions.InvalidClientException;
+import org.springframework.security.oauth2.core.OAuth2AccessToken;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
@@ -214,7 +212,7 @@ public class DynamicRegistrationClientConfigurationService implements ClientConf
 
 					return client;
 				} catch (RestClientException rce) {
-					throw new InvalidClientException("Error registering client with server");
+					throw new OAuth2AuthenticationException("Error registering client with server");
 				}
 			} else {
 
@@ -222,7 +220,7 @@ public class DynamicRegistrationClientConfigurationService implements ClientConf
 
 					// load this client's information from the server
 					HttpHeaders headers = new HttpHeaders();
-					headers.set("Authorization", String.format("%s %s", OAuth2AccessToken.BEARER_TYPE, knownClient.getRegistrationAccessToken()));
+					headers.set("Authorization", String.format("%s %s", OAuth2AccessToken.TokenType.BEARER, knownClient.getRegistrationAccessToken()));
 					headers.setAccept(Lists.newArrayList(MediaType.APPLICATION_JSON));
 
 					HttpEntity<String> entity = new HttpEntity<>(headers);
@@ -235,7 +233,7 @@ public class DynamicRegistrationClientConfigurationService implements ClientConf
 
 						return client;
 					} catch (RestClientException rce) {
-						throw new InvalidClientException("Error loading previously registered client information from server");
+						throw new OAuth2AuthenticationException("Error loading previously registered client information from server");
 					}
 				} else {
 					// it's got a client ID from the store, don't bother trying to load it

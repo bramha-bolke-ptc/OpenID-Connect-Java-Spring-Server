@@ -29,6 +29,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.text.ParseException;
+import java.time.Duration;
 import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
@@ -41,6 +42,7 @@ import jakarta.servlet.http.HttpSession;
 import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.core5.util.Timeout;
 import org.mitre.jwt.signer.service.JWTSigningAndValidationService;
 import org.mitre.jwt.signer.service.impl.JWKSetCacheService;
 import org.mitre.jwt.signer.service.impl.SymmetricKeyJWTValidatorCacheService;
@@ -64,6 +66,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClientException;
@@ -93,6 +96,7 @@ import com.nimbusds.jwt.SignedJWT;
  * @author nemonik, jricher
  *
  */
+@Component
 public class OIDCAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
 	protected final static String REDIRECT_URI_SESION_VARIABLE = "redirect_uri";
@@ -348,7 +352,7 @@ public class OIDCAuthenticationFilter extends AbstractAuthenticationProcessingFi
 			httpClient = HttpClientBuilder.create()
 					.useSystemProperties()
 					.setDefaultRequestConfig(RequestConfig.custom()
-							.setSocketTimeout(httpSocketTimeout)
+							.setResponseTimeout(Timeout.ofMilliseconds(httpSocketTimeout))
 							.build())
 					.build();
 		}

@@ -20,6 +20,7 @@
  */
 package org.mitre.openid.connect.client.service.impl;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 
 import org.mitre.openid.connect.client.model.IssuerServiceResponse;
@@ -52,7 +53,7 @@ public class StaticSingleIssuerService implements IssuerService {
 	/**
 	 * Always returns the configured issuer URL
 	 *
-	 * @see org.mitre.openid.connect.client.service.IssuerService#getIssuer(javax.servlet.http.HttpServletRequest)
+	 * @see org.mitre.openid.connect.client.service.IssuerService#getIssuer(HttpServletRequest)
 	 */
 	@Override
 	public IssuerServiceResponse getIssuer(HttpServletRequest request) {

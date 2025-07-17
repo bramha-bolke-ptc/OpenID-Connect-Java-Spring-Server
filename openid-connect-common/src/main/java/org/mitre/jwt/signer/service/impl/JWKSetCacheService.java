@@ -20,6 +20,7 @@
  */
 package org.mitre.jwt.signer.service.impl;
 
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
@@ -80,7 +81,7 @@ public class JWKSetCacheService {
 	 * @param jwksUri
 	 * @return
 	 * @throws ExecutionException
-	 * @see com.google.common.cache.Cache#get(java.lang.Object)
+	 * @see com.google.common.cache.Cache#get(Object, Callable)
 	 */
 	public JWTSigningAndValidationService getValidator(String jwksUri) {
 		try {

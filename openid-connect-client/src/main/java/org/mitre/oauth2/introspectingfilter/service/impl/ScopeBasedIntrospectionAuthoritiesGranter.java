@@ -17,14 +17,16 @@
 package org.mitre.oauth2.introspectingfilter.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.mitre.oauth2.introspectingfilter.service.IntrospectionAuthorityGranter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.oauth2.common.util.OAuth2Utils;
 
 import com.google.gson.JsonObject;
 
@@ -45,7 +47,10 @@ public class ScopeBasedIntrospectionAuthoritiesGranter implements IntrospectionA
 
 		if (introspectionResponse.has("scope") && introspectionResponse.get("scope").isJsonPrimitive()) {
 			String scopeString = introspectionResponse.get("scope").getAsString();
-			Set<String> scopes = OAuth2Utils.parseParameterList(scopeString);
+			Set<String> scopes = (scopeString != null && !scopeString.trim().isEmpty())
+				? Arrays.stream(scopeString.split(" "))
+				.collect(Collectors.toSet())
+				: new HashSet<>();
 			for (String scope : scopes) {
 				auth.add(new SimpleGrantedAuthority("OAUTH_SCOPE_" + scope));
 			}
