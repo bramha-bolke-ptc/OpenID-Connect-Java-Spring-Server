@@ -52,8 +52,8 @@ public class TestOAuth2AccessTokenImpl {
 
 		OAuth2AccessTokenImpl tok = new OAuth2AccessTokenImpl(tokenObj, tokenString);
 
-		assertThat(tok.getScope(), is(equalTo(scopes)));
-		assertThat(tok.getExpiration(), is(equalTo(exp)));
+		assertThat(tok.getScopes(), is(equalTo(scopes)));
+		assertThat(tok.getExpiresAt(), is(equalTo(exp)));
 	}
 
 	@Test
@@ -68,8 +68,8 @@ public class TestOAuth2AccessTokenImpl {
 
 		OAuth2AccessTokenImpl tok = new OAuth2AccessTokenImpl(tokenObj, tokenString);
 
-		assertThat(tok.getScope(), is(equalTo(scopes)));
-		assertThat(tok.getExpiration(), is(equalTo(null)));
+		assertThat(tok.getScopes(), is(equalTo(scopes)));
+		assertThat(tok.getExpiresAt(), is(equalTo(null)));
 	}
 
 	@Test
@@ -84,8 +84,8 @@ public class TestOAuth2AccessTokenImpl {
 
 		OAuth2AccessTokenImpl tok = new OAuth2AccessTokenImpl(tokenObj, tokenString);
 
-		assertThat(tok.getScope(), is(equalTo(Collections.EMPTY_SET)));
-		assertThat(tok.getExpiration(), is(equalTo(exp)));
+		assertThat(tok.getScopes(), is(equalTo(Collections.EMPTY_SET)));
+		assertThat(tok.getExpiresAt(), is(equalTo(exp)));
 	}
 
 	@Test
@@ -99,8 +99,8 @@ public class TestOAuth2AccessTokenImpl {
 
 		OAuth2AccessTokenImpl tok = new OAuth2AccessTokenImpl(tokenObj, tokenString);
 
-		assertThat(tok.getScope(), is(equalTo(Collections.EMPTY_SET)));
-		assertThat(tok.getExpiration(), is(equalTo(null)));
+		assertThat(tok.getScopes(), is(equalTo(Collections.EMPTY_SET)));
+		assertThat(tok.getExpiresAt(), is(equalTo(null)));
 	}
 
 }

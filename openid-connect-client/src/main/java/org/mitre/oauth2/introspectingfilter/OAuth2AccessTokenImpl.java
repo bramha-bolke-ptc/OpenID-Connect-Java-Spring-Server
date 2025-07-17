@@ -17,87 +17,84 @@
  *******************************************************************************/
 package org.mitre.oauth2.introspectingfilter;
 
-import java.util.Date;
+import java.time.Instant;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
-import org.springframework.security.oauth2.common.OAuth2AccessToken;
-import org.springframework.security.oauth2.common.OAuth2RefreshToken;
+import org.springframework.security.oauth2.core.OAuth2AccessToken;
 
-import com.google.common.base.Splitter;
-import com.google.common.collect.Sets;
 import com.google.gson.JsonObject;
 
-
-public class OAuth2AccessTokenImpl implements OAuth2AccessToken {
+public class OAuth2AccessTokenImpl extends OAuth2AccessToken {
 
 	private JsonObject introspectionResponse;
-	private String tokenString;
+	private String tokenValue;
 	private Set<String> scopes = new HashSet<>();
-	private Date expireDate;
+	private Instant expiresAt;
+	private Instant issuedAt;
 
+	public OAuth2AccessTokenImpl(JsonObject introspectionResponse, String tokenValue) {
+		super(TokenType.BEARER,
+			tokenValue,
+			extractIssuedAt(introspectionResponse),
+			extractExpiresAt(introspectionResponse),
+			extractScopes(introspectionResponse));
 
-	public OAuth2AccessTokenImpl(JsonObject introspectionResponse, String tokenString) {
 		this.setIntrospectionResponse(introspectionResponse);
-		this.tokenString = tokenString;
-		if (introspectionResponse.get("scope") != null) {
-			scopes = Sets.newHashSet(Splitter.on(" ").split(introspectionResponse.get("scope").getAsString()));
-		}
-
-		if (introspectionResponse.get("exp") != null) {
-			expireDate = new Date(introspectionResponse.get("exp").getAsLong() * 1000L);
-		}
+		this.tokenValue = tokenValue;
 	}
 
-
-	@Override
-	public Map<String, Object> getAdditionalInformation() {
+	private static Instant extractIssuedAt(JsonObject introspectionResponse) {
+		if (introspectionResponse.has("iat") && !introspectionResponse.get("iat").isJsonNull()) {
+			return Instant.ofEpochSecond(introspectionResponse.get("iat").getAsLong());
+		}
 		return null;
 	}
 
-	@Override
-	public Set<String> getScope() {
-		return scopes;
-	}
-
-	@Override
-	public OAuth2RefreshToken getRefreshToken() {
+	private static Instant extractExpiresAt(JsonObject introspectionResponse) {
+		if (introspectionResponse.has("exp") && !introspectionResponse.get("exp").isJsonNull()) {
+			return Instant.ofEpochSecond(introspectionResponse.get("exp").getAsLong());
+		}
 		return null;
 	}
 
-	@Override
-	public String getTokenType() {
-		return BEARER_TYPE;
+	private static Set<String> extractScopes(JsonObject introspectionResponse) {
+		if (introspectionResponse.has("scope") && !introspectionResponse.get("scope").isJsonNull()) {
+			String scopeString = introspectionResponse.get("scope").getAsString();
+			if (scopeString != null && !scopeString.trim().isEmpty()) {
+				return Arrays.stream(scopeString.split(" "))
+					.collect(Collectors.toSet());
+			}
+		}
+		return new HashSet<>(); // Return empty set if no scopes
 	}
 
 	@Override
+	public Set<String> getScopes() {
+		return Collections.unmodifiableSet(scopes);
+	}
+
+	@Override
+	public TokenType getTokenType() {
+		return TokenType.BEARER;
+	}
+
 	public boolean isExpired() {
-		if (expireDate != null && expireDate.before(new Date())) {
-			return true;
-		}
-		return false;
+		return expiresAt != null && Instant.now().isAfter(expiresAt);
 	}
 
 	@Override
-	public Date getExpiration() {
-		return expireDate;
+	public Instant getExpiresAt() {
+		return expiresAt;
 	}
 
 	@Override
-	public int getExpiresIn() {
-		if (expireDate != null) {
-			return (int)TimeUnit.MILLISECONDS.toSeconds(expireDate.getTime() - (new Date()).getTime());
-		}
-		return 0;
+	public String getTokenValue() {
+		return tokenValue;
 	}
-
-	@Override
-	public String getValue() {
-		return tokenString;
-	}
-
 
 	/**
 	 * @return the token
@@ -105,7 +102,6 @@ public class OAuth2AccessTokenImpl implements OAuth2AccessToken {
 	public JsonObject getIntrospectionResponse() {
 		return introspectionResponse;
 	}
-
 
 	/**
 	 * @param token the token to set
