@@ -224,7 +224,7 @@ public class DeviceCode {
 	}
 
 	/**
-	 * @param authentication the authentication to set
+	 * @param authenticationHolder the authentication to set
 	 */
 	public void setAuthenticationHolder(AuthenticationHolderEntity authenticationHolder) {
 		this.authenticationHolder = authenticationHolder;
