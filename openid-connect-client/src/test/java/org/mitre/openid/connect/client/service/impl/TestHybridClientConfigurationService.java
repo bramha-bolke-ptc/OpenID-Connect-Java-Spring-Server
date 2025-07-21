@@ -23,10 +23,9 @@ import org.junit.runner.RunWith;
 import org.mitre.oauth2.model.RegisteredClient;
 import org.mitre.openid.connect.config.ServerConfiguration;
 import org.mockito.InjectMocks;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -38,7 +37,7 @@ import static org.junit.Assert.assertThat;
  * @author wkim
  *
  */
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class TestHybridClientConfigurationService {
 
 	@Mock
@@ -77,7 +76,7 @@ public class TestHybridClientConfigurationService {
 		RegisteredClient result = hybridService.getClientConfiguration(mockServerConfig);
 
 		Mockito.verify(mockStaticService).getClientConfiguration(mockServerConfig);
-		Mockito.verify(mockDynamicService, Mockito.never()).getClientConfiguration(Matchers.any(ServerConfiguration.class));
+		Mockito.verify(mockDynamicService, Mockito.never()).getClientConfiguration(Mockito.any(ServerConfiguration.class));
 		assertEquals(mockClient, result);
 	}
 

@@ -208,10 +208,10 @@ public class RegisteredClient {
 	}
 	/**
 	 * @return
-	 * @see org.mitre.oauth2.model.ClientDetailsEntity#getScope()
+	 * @see org.mitre.oauth2.model.ClientDetailsEntity#getScopes()
 	 */
 	public Set<String> getScope() {
-		return client.getScope();
+		return client.getScopes();
 	}
 	/**
 	 * @param scope
@@ -574,7 +574,7 @@ public class RegisteredClient {
 	}
 	/**
 	 * @param postLogoutRedirectUri
-	 * @see org.mitre.oauth2.model.ClientDetailsEntity#setPostLogoutRedirectUris(java.lang.String)
+	 * @see org.mitre.oauth2.model.ClientDetailsEntity#setPostLogoutRedirectUris(Set)
 	 */
 	public void setPostLogoutRedirectUris(Set<String> postLogoutRedirectUri) {
 		client.setPostLogoutRedirectUris(postLogoutRedirectUri);
@@ -767,7 +767,7 @@ public class RegisteredClient {
 		return clientSecretExpiresAt;
 	}
 	/**
-	 * @param clientSecretExpiresAt the clientSecretExpiresAt to set
+	 * @param expiresAt the clientSecretExpiresAt to set
 	 */
 	public void setClientSecretExpiresAt(Date expiresAt) {
 		this.clientSecretExpiresAt = expiresAt;
@@ -779,7 +779,7 @@ public class RegisteredClient {
 		return clientIdIssuedAt;
 	}
 	/**
-	 * @param clientIdIssuedAt the clientIdIssuedAt to set
+	 * @param issuedAt the clientIdIssuedAt to set
 	 */
 	public void setClientIdIssuedAt(Date issuedAt) {
 		this.clientIdIssuedAt = issuedAt;

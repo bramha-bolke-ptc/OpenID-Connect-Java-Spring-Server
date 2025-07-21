@@ -62,7 +62,7 @@ public class TestPlainAuthRequestUrlBuilder {
 		String expectedUrl = "https://server.example.com/authorize?" +
 				"response_type=code" +
 				"&client_id=s6BhdRkqt3" +
-				"&scope=openid+profile" + // plus sign used for space per application/x-www-form-encoded standard
+				"&scope=openid%20profile" + // plus sign used for space per application/x-www-form-encoded standard
 				"&redirect_uri=https%3A%2F%2Fclient.example.org%2F" +
 				"&nonce=34fasf3ds" +
 				"&state=af0ifjsldkj" +
@@ -81,7 +81,7 @@ public class TestPlainAuthRequestUrlBuilder {
 		String expectedUrl = "https://server.example.com/authorize?" +
 				"response_type=code" +
 				"&client_id=s6BhdRkqt3" +
-				"&scope=openid+profile" + // plus sign used for space per application/x-www-form-encoded standard
+				"&scope=openid%20profile" + // plus sign used for space per application/x-www-form-encoded standard
 				"&redirect_uri=https%3A%2F%2Fclient.example.org%2F" +
 				"&nonce=34fasf3ds" +
 				"&state=af0ifjsldkj" +

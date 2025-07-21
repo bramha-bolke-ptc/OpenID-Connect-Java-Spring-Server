@@ -19,7 +19,6 @@ package org.mitre.oauth2.introspectingfilter;
 
 import java.time.Instant;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -31,10 +30,6 @@ import com.google.gson.JsonObject;
 public class OAuth2AccessTokenImpl extends OAuth2AccessToken {
 
 	private JsonObject introspectionResponse;
-	private String tokenValue;
-	private Set<String> scopes = new HashSet<>();
-	private Instant expiresAt;
-	private Instant issuedAt;
 
 	public OAuth2AccessTokenImpl(JsonObject introspectionResponse, String tokenValue) {
 		super(TokenType.BEARER,
@@ -44,7 +39,6 @@ public class OAuth2AccessTokenImpl extends OAuth2AccessToken {
 			extractScopes(introspectionResponse));
 
 		this.setIntrospectionResponse(introspectionResponse);
-		this.tokenValue = tokenValue;
 	}
 
 	private static Instant extractIssuedAt(JsonObject introspectionResponse) {
@@ -73,27 +67,8 @@ public class OAuth2AccessTokenImpl extends OAuth2AccessToken {
 	}
 
 	@Override
-	public Set<String> getScopes() {
-		return Collections.unmodifiableSet(scopes);
-	}
-
-	@Override
 	public TokenType getTokenType() {
 		return TokenType.BEARER;
-	}
-
-	public boolean isExpired() {
-		return expiresAt != null && Instant.now().isAfter(expiresAt);
-	}
-
-	@Override
-	public Instant getExpiresAt() {
-		return expiresAt;
-	}
-
-	@Override
-	public String getTokenValue() {
-		return tokenValue;
 	}
 
 	/**

@@ -15,15 +15,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
-/**
- *
- */
+
 package org.mitre.oauth2.model;
 
-import java.util.Date;
+import java.text.ParseException;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+
+import org.mitre.oauth2.model.convert.JWTStringConverter;
+import org.mitre.openid.connect.model.ApprovedSite;
+import org.mitre.uma.model.Permission;
+import org.springframework.security.oauth2.core.OAuth2AccessToken;
+import org.springframework.security.oauth2.core.OAuth2RefreshToken;
+
+import com.nimbusds.jwt.JWT;
+import com.nimbusds.jwt.JWTParser;
 
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
@@ -46,14 +56,6 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.Transient;
 
-import org.mitre.oauth2.model.convert.JWTStringConverter;
-import org.mitre.openid.connect.model.ApprovedSite;
-import org.mitre.uma.model.Permission;
-import org.springframework.security.oauth2.core.OAuth2AccessToken;
-import org.springframework.security.oauth2.core.OAuth2RefreshToken;
-
-import com.nimbusds.jwt.JWT;
-
 /**
  * @author jricher
  *
@@ -62,7 +64,7 @@ import com.nimbusds.jwt.JWT;
 @Table(name = "access_token")
 @NamedQueries({
 	@NamedQuery(name = OAuth2AccessTokenEntity.QUERY_ALL, query = "select a from OAuth2AccessTokenEntity a"),
-	@NamedQuery(name = OAuth2AccessTokenEntity.QUERY_EXPIRED_BY_DATE, query = "select a from OAuth2AccessTokenEntity a where a.expiration <= :" + OAuth2AccessTokenEntity.PARAM_DATE),
+	@NamedQuery(name = OAuth2AccessTokenEntity.QUERY_EXPIRED_BY_DATE, query = "select a from OAuth2AccessTokenEntity a where a.expiresAt <= :" + OAuth2AccessTokenEntity.PARAM_DATE),
 	@NamedQuery(name = OAuth2AccessTokenEntity.QUERY_BY_REFRESH_TOKEN, query = "select a from OAuth2AccessTokenEntity a where a.refreshToken = :" + OAuth2AccessTokenEntity.PARAM_REFERSH_TOKEN),
 	@NamedQuery(name = OAuth2AccessTokenEntity.QUERY_BY_CLIENT, query = "select a from OAuth2AccessTokenEntity a where a.client = :" + OAuth2AccessTokenEntity.PARAM_CLIENT),
 	@NamedQuery(name = OAuth2AccessTokenEntity.QUERY_BY_TOKEN_VALUE, query = "select a from OAuth2AccessTokenEntity a where a.jwt = :" + OAuth2AccessTokenEntity.PARAM_TOKEN_VALUE),
@@ -71,7 +73,7 @@ import com.nimbusds.jwt.JWT;
 	@NamedQuery(name = OAuth2AccessTokenEntity.QUERY_BY_NAME, query = "select r from OAuth2AccessTokenEntity r where r.authenticationHolder.userAuth.name = :" + OAuth2AccessTokenEntity.PARAM_NAME)
 })
 
-public class OAuth2AccessTokenEntity implements OAuth2AccessToken {
+public class OAuth2AccessTokenEntity extends OAuth2AccessToken {
 
 	public static final String QUERY_BY_APPROVED_SITE = "OAuth2AccessTokenEntity.getByApprovedSite";
 	public static final String QUERY_BY_TOKEN_VALUE = "OAuth2AccessTokenEntity.getByTokenValue";
@@ -100,9 +102,9 @@ public class OAuth2AccessTokenEntity implements OAuth2AccessToken {
 
 	private JWT jwtValue; // JWT-encoded access token value
 
-	private Date expiration;
+	private Instant expiresAt;
 
-	private String tokenType = OAuth2AccessToken.BEARER_TYPE;
+	private TokenType tokenType = TokenType.BEARER;
 
 	private OAuth2RefreshTokenEntity refreshToken;
 
@@ -114,12 +116,18 @@ public class OAuth2AccessTokenEntity implements OAuth2AccessToken {
 
 	private Map<String, Object> additionalInformation = new HashMap<>(); // ephemeral map of items to be added to the OAuth token response
 
-	/**
-	 * Create a new, blank access token
-	 */
 	public OAuth2AccessTokenEntity() {
-
+		super(TokenType.BEARER, null, null, null, Collections.emptySet());
 	}
+
+	 public OAuth2AccessTokenEntity(TokenType tokenType, String tokenValue, Instant issuedAt, Instant expiresAt, Set<String> scopes)
+		 throws ParseException {
+	     super(tokenType, tokenValue, issuedAt, expiresAt, scopes);
+	     this.jwtValue = JWTParser.parse(tokenValue);
+	     this.expiresAt = expiresAt;
+	     this.tokenType = tokenType;
+	     this.scope = scopes;
+	 }
 
 	/**
 	 * @return the id
@@ -142,7 +150,6 @@ public class OAuth2AccessTokenEntity implements OAuth2AccessToken {
 	 * Get all additional information to be sent to the serializer as part of the token response.
 	 * This map is not persisted to the database.
 	 */
-	@Override
 	@Transient
 	public Map<String, Object> getAdditionalInformation() {
 		return additionalInformation;
@@ -159,7 +166,7 @@ public class OAuth2AccessTokenEntity implements OAuth2AccessToken {
 	}
 
 	/**
-	 * @param authentication the authentication to set
+	 * @param authenticationHolder the authentication to set
 	 */
 	public void setAuthenticationHolder(AuthenticationHolderEntity authenticationHolder) {
 		this.authenticationHolder = authenticationHolder;
@@ -186,7 +193,7 @@ public class OAuth2AccessTokenEntity implements OAuth2AccessToken {
 	 */
 	@Override
 	@Transient
-	public String getValue() {
+	public String getTokenValue() {
 		return jwtValue.serialize();
 	}
 
@@ -194,26 +201,25 @@ public class OAuth2AccessTokenEntity implements OAuth2AccessToken {
 	@Basic
 	@Temporal(jakarta.persistence.TemporalType.TIMESTAMP)
 	@Column(name = "expiration")
-	public Date getExpiration() {
-		return expiration;
+	public Instant getExpiresAt() {
+		return expiresAt;
 	}
 
-	public void setExpiration(Date expiration) {
-		this.expiration = expiration;
+	public void getExpiresAt(Instant expiresAt) {
+		this.expiresAt = expiresAt;
 	}
 
 	@Override
 	@Basic
 	@Column(name="token_type")
-	public String getTokenType() {
+	public TokenType getTokenType() {
 		return tokenType;
 	}
 
-	public void setTokenType(String tokenType) {
+	public void setTokenType(TokenType tokenType) {
 		this.tokenType = tokenType;
 	}
 
-	@Override
 	@ManyToOne
 	@JoinColumn(name="refresh_token_id")
 	public OAuth2RefreshTokenEntity getRefreshToken() {
@@ -238,18 +244,17 @@ public class OAuth2AccessTokenEntity implements OAuth2AccessToken {
 			joinColumns=@JoinColumn(name="owner_id"),
 			name="token_scope"
 			)
-	public Set<String> getScope() {
+	public Set<String> getScopes() {
 		return scope;
 	}
 
-	public void setScope(Set<String> scope) {
+	public void setScopes(Set<String> scope) {
 		this.scope = scope;
 	}
 
-	@Override
 	@Transient
 	public boolean isExpired() {
-		return getExpiration() == null ? false : System.currentTimeMillis() > getExpiration().getTime();
+		return expiresAt != null && Instant.now().isAfter(expiresAt);
 	}
 
 	/**
@@ -263,24 +268,23 @@ public class OAuth2AccessTokenEntity implements OAuth2AccessToken {
 	}
 
 	/**
-	 * @param jwtValue the jwtValue to set
+	 * @param jwt the jwtValue to set
 	 */
 	public void setJwt(JWT jwt) {
 		this.jwtValue = jwt;
 	}
 
-	@Override
 	@Transient
 	public int getExpiresIn() {
 
-		if (getExpiration() == null) {
+		if (getExpiresAt() == null) {
 			return -1; // no expiration time
 		} else {
-			int secondsRemaining = (int) ((getExpiration().getTime() - System.currentTimeMillis()) / 1000);
-			if (isExpired()) {
-				return 0; // has an expiration time and expired
-			} else { // has an expiration time and not expired
-				return secondsRemaining;
+			Duration duration = Duration.between(Instant.now(), getExpiresAt());
+			if (duration.isNegative()) {
+				return 0; // Already expired
+			} else {
+				return (int) duration.getSeconds();
 			}
 		}
 	}

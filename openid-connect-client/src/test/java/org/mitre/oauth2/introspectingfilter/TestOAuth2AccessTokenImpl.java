@@ -42,7 +42,6 @@ public class TestOAuth2AccessTokenImpl {
 	@Test
 	public void testFullToken() {
 
-
 		JsonObject tokenObj = new JsonObject();
 		tokenObj.addProperty("active", true);
 		tokenObj.addProperty("scope", scopeString);
@@ -53,7 +52,7 @@ public class TestOAuth2AccessTokenImpl {
 		OAuth2AccessTokenImpl tok = new OAuth2AccessTokenImpl(tokenObj, tokenString);
 
 		assertThat(tok.getScopes(), is(equalTo(scopes)));
-		assertThat(tok.getExpiresAt(), is(equalTo(exp)));
+		assertThat(tok.getExpiresAt(), is(equalTo(exp.toInstant())));
 	}
 
 	@Test
@@ -85,7 +84,7 @@ public class TestOAuth2AccessTokenImpl {
 		OAuth2AccessTokenImpl tok = new OAuth2AccessTokenImpl(tokenObj, tokenString);
 
 		assertThat(tok.getScopes(), is(equalTo(Collections.EMPTY_SET)));
-		assertThat(tok.getExpiresAt(), is(equalTo(exp)));
+		assertThat(tok.getExpiresAt(), is(equalTo(exp.toInstant())));
 	}
 
 	@Test

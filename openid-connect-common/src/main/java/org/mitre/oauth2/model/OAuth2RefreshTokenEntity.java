@@ -56,7 +56,7 @@ import com.nimbusds.jwt.JWT;
 	@NamedQuery(name = OAuth2RefreshTokenEntity.QUERY_BY_TOKEN_VALUE, query = "select r from OAuth2RefreshTokenEntity r where r.jwt = :" + OAuth2RefreshTokenEntity.PARAM_TOKEN_VALUE),
 	@NamedQuery(name = OAuth2RefreshTokenEntity.QUERY_BY_NAME, query = "select r from OAuth2RefreshTokenEntity r where r.authenticationHolder.userAuth.name = :" + OAuth2RefreshTokenEntity.PARAM_NAME)
 })
-public class OAuth2RefreshTokenEntity implements OAuth2RefreshToken {
+public class OAuth2RefreshTokenEntity extends OAuth2RefreshToken {
 
 	public static final String QUERY_BY_TOKEN_VALUE = "OAuth2RefreshTokenEntity.getByTokenValue";
 	public static final String QUERY_BY_CLIENT = "OAuth2RefreshTokenEntity.getByClient";
@@ -85,7 +85,7 @@ public class OAuth2RefreshTokenEntity implements OAuth2RefreshToken {
 	 *
 	 */
 	public OAuth2RefreshTokenEntity() {
-
+		super("", null);
 	}
 
 	/**
@@ -129,7 +129,7 @@ public class OAuth2RefreshTokenEntity implements OAuth2RefreshToken {
 	 */
 	@Override
 	@Transient
-	public String getValue() {
+	public String getTokenValue() {
 		return jwt.serialize();
 	}
 

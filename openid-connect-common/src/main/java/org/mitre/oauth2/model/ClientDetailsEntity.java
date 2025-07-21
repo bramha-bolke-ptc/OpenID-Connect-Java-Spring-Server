@@ -15,9 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
-/**
- *
- */
+
 package org.mitre.oauth2.model;
 
 import java.util.Date;
@@ -56,7 +54,7 @@ import org.mitre.oauth2.model.convert.JWTStringConverter;
 import org.mitre.oauth2.model.convert.PKCEAlgorithmStringConverter;
 import org.mitre.oauth2.model.convert.SimpleGrantedAuthorityStringConverter;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.oauth2.provider.ClientDetails;
+import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 
 import com.nimbusds.jose.EncryptionMethod;
 import com.nimbusds.jose.JWEAlgorithm;
@@ -74,7 +72,7 @@ import com.nimbusds.jwt.JWT;
 	@NamedQuery(name = ClientDetailsEntity.QUERY_ALL, query = "SELECT c FROM ClientDetailsEntity c"),
 	@NamedQuery(name = ClientDetailsEntity.QUERY_BY_CLIENT_ID, query = "select c from ClientDetailsEntity c where c.clientId = :" + ClientDetailsEntity.PARAM_CLIENT_ID)
 })
-public class ClientDetailsEntity implements ClientDetails {
+public class ClientDetailsEntity extends RegisteredClient {
 
 	public static final String QUERY_BY_CLIENT_ID = "ClientDetailsEntity.getByClientId";
 	public static final String QUERY_ALL = "ClientDetailsEntity.findAll";
@@ -85,7 +83,7 @@ public class ClientDetailsEntity implements ClientDetails {
 
 	private static final long serialVersionUID = -1617727085733786296L;
 
-	private Long id;
+	private Long longId;
 
 	/** Fields from the OAuth2 Dynamic Registration Specification */
 	private String clientId = null; // client_id
@@ -262,16 +260,16 @@ public class ClientDetailsEntity implements ClientDetails {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
-	public Long getId() {
-		return id;
+	public Long getLongId() {
+		return longId;
 	}
 
 	/**
 	 *
-	 * @param id the id to set
+	 * @param longId the id to set
 	 */
-	public void setId(Long id) {
-		this.id = id;
+	public void setLongId(Long longId) {
+		this.longId = longId;
 	}
 
 	/**
@@ -369,7 +367,6 @@ public class ClientDetailsEntity implements ClientDetails {
 	/**
 	 *
 	 */
-	@Override
 	@Transient
 	public boolean isSecretRequired() {
 		if (getTokenEndpointAuthMethod() != null &&
@@ -386,10 +383,9 @@ public class ClientDetailsEntity implements ClientDetails {
 	/**
 	 * If the scope list is not null or empty, then this client has been scoped.
 	 */
-	@Override
 	@Transient
 	public boolean isScoped() {
-		return getScope() != null && !getScope().isEmpty();
+		return getScopes() != null && !getScopes().isEmpty();
 	}
 
 	/**
@@ -436,7 +432,7 @@ public class ClientDetailsEntity implements ClientDetails {
 			)
 	@Override
 	@Column(name="scope")
-	public Set<String> getScope() {
+	public Set<String> getScopes() {
 		return scope;
 	}
 
@@ -461,7 +457,7 @@ public class ClientDetailsEntity implements ClientDetails {
 	}
 
 	/**
-	 * @param authorizedGrantTypes the OAuth2 grant types that this client is allowed to use
+	 * @param grantTypes the OAuth2 grant types that this client is allowed to use
 	 */
 	public void setGrantTypes(Set<String> grantTypes) {
 		this.grantTypes = grantTypes;
@@ -470,7 +466,6 @@ public class ClientDetailsEntity implements ClientDetails {
 	/**
 	 * passthrough for SECOAUTH api
 	 */
-	@Override
 	@Transient
 	public Set<String> getAuthorizedGrantTypes() {
 		return getGrantTypes();
@@ -484,7 +479,6 @@ public class ClientDetailsEntity implements ClientDetails {
 			name="client_authority",
 			joinColumns=@JoinColumn(name="owner_id")
 			)
-	@Override
 	@Convert(converter = SimpleGrantedAuthorityStringConverter.class)
 	@Column(name="authority")
 	public Set<GrantedAuthority> getAuthorities() {
@@ -498,7 +492,6 @@ public class ClientDetailsEntity implements ClientDetails {
 		this.authorities = authorities;
 	}
 
-	@Override
 	@Basic
 	@Column(name="access_token_validity_seconds")
 	public Integer getAccessTokenValiditySeconds() {
@@ -506,13 +499,12 @@ public class ClientDetailsEntity implements ClientDetails {
 	}
 
 	/**
-	 * @param accessTokenTimeout the accessTokenTimeout to set
+	 * @param accessTokenValiditySeconds the accessTokenTimeout to set
 	 */
 	public void setAccessTokenValiditySeconds(Integer accessTokenValiditySeconds) {
 		this.accessTokenValiditySeconds = accessTokenValiditySeconds;
 	}
 
-	@Override
 	@Basic
 	@Column(name="refresh_token_validity_seconds")
 	public Integer getRefreshTokenValiditySeconds() {
@@ -520,7 +512,7 @@ public class ClientDetailsEntity implements ClientDetails {
 	}
 
 	/**
-	 * @param refreshTokenTimeout Lifetime of refresh tokens, in seconds (optional - leave null for no timeout)
+	 * @param refreshTokenValiditySeconds Lifetime of refresh tokens, in seconds (optional - leave null for no timeout)
 	 */
 	public void setRefreshTokenValiditySeconds(Integer refreshTokenValiditySeconds) {
 		this.refreshTokenValiditySeconds = refreshTokenValiditySeconds;
@@ -540,7 +532,7 @@ public class ClientDetailsEntity implements ClientDetails {
 	}
 
 	/**
-	 * @param registeredRedirectUri the registeredRedirectUri to set
+	 * @param redirectUris the registeredRedirectUri to set
 	 */
 	public void setRedirectUris(Set<String> redirectUris) {
 		this.redirectUris = redirectUris;
@@ -549,7 +541,6 @@ public class ClientDetailsEntity implements ClientDetails {
 	/**
 	 * Pass-through method to fulfill the ClientDetails interface with a bad name
 	 */
-	@Override
 	@Transient
 	public Set<String> getRegisteredRedirectUri() {
 		return getRedirectUris();
@@ -558,7 +549,6 @@ public class ClientDetailsEntity implements ClientDetails {
 	/**
 	 * @return the resourceIds
 	 */
-	@Override
 	@ElementCollection(fetch = FetchType.EAGER)
 	@CollectionTable(
 			name="client_resource",
@@ -585,7 +575,6 @@ public class ClientDetailsEntity implements ClientDetails {
 	 *
 	 * @return an empty map
 	 */
-	@Override
 	@Transient
 	public Map<String, Object> getAdditionalInformation() {
 		return this.additionalInformation;
@@ -678,7 +667,7 @@ public class ClientDetailsEntity implements ClientDetails {
 	}
 
 	/**
-	 * @param clientUrl the clientUrl to set
+	 * @param clientUri the clientUrl to set
 	 */
 	public void setClientUri(String clientUri) {
 		this.clientUri = clientUri;
@@ -694,7 +683,7 @@ public class ClientDetailsEntity implements ClientDetails {
 	}
 
 	/**
-	 * @param tosUrl the tosUrl to set
+	 * @param tosUri the tosUrl to set
 	 */
 	public void setTosUri(String tosUri) {
 		this.tosUri = tosUri;
@@ -960,7 +949,6 @@ public class ClientDetailsEntity implements ClientDetails {
 	/**
 	 * Our framework doesn't use this construct, we use WhitelistedSites and ApprovedSites instead.
 	 */
-	@Override
 	public boolean isAutoApprove(String scope) {
 		return false;
 	}

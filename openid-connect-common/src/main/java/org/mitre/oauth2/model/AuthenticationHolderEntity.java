@@ -19,10 +19,12 @@ package org.mitre.oauth2.model;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import org.mitre.oauth2.model.convert.SerializableStringConverter;
+import org.mitre.oauth2.model.convert.SimpleGrantedAuthorityStringConverter;
+import org.springframework.security.core.GrantedAuthority;
 
 import jakarta.persistence.Basic;
 import jakarta.persistence.CascadeType;
@@ -41,13 +43,6 @@ import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
-
-import org.mitre.oauth2.model.convert.SerializableStringConverter;
-import org.mitre.oauth2.model.convert.SimpleGrantedAuthorityStringConverter;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
-import org.springframework.security.oauth2.provider.OAuth2Request;
 
 @Entity
 @Table(name = "authentication_holder")
@@ -98,40 +93,6 @@ public class AuthenticationHolderEntity {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	@Transient
-	public OAuth2Authentication getAuthentication() {
-		// TODO: memoize this
-		return new OAuth2Authentication(createOAuth2Request(), getUserAuth());
-	}
-
-	/**
-	 * @return
-	 */
-	private OAuth2Request createOAuth2Request() {
-		return new OAuth2Request(requestParameters, clientId, authorities, approved, scope, resourceIds, redirectUri, responseTypes, extensions);
-	}
-
-	public void setAuthentication(OAuth2Authentication authentication) {
-
-		// pull apart the request and save its bits
-		OAuth2Request o2Request = authentication.getOAuth2Request();
-		setAuthorities(o2Request.getAuthorities() == null ? null : new HashSet<>(o2Request.getAuthorities()));
-		setClientId(o2Request.getClientId());
-		setExtensions(o2Request.getExtensions() == null ? null : new HashMap<>(o2Request.getExtensions()));
-		setRedirectUri(o2Request.getRedirectUri());
-		setRequestParameters(o2Request.getRequestParameters() == null ? null : new HashMap<>(o2Request.getRequestParameters()));
-		setResourceIds(o2Request.getResourceIds() == null ? null : new HashSet<>(o2Request.getResourceIds()));
-		setResponseTypes(o2Request.getResponseTypes() == null ? null : new HashSet<>(o2Request.getResponseTypes()));
-		setScope(o2Request.getScope() == null ? null : new HashSet<>(o2Request.getScope()));
-		setApproved(o2Request.isApproved());
-
-		if (authentication.getUserAuthentication() != null) {
-			this.userAuth = new SavedUserAuthentication(authentication.getUserAuthentication());
-		} else {
-			this.userAuth = null;
-		}
 	}
 
 	/**

@@ -17,22 +17,19 @@
  *******************************************************************************/
 package org.mitre.openid.connect.client.service.impl;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mitre.openid.connect.config.ServerConfiguration;
 import org.mockito.InjectMocks;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import org.mockito.junit.MockitoJUnitRunner;
 
 /**
  * @author wkim
@@ -71,7 +68,7 @@ public class TestHybridServerConfigurationService {
 		ServerConfiguration result = hybridService.getServerConfiguration(issuer);
 
 		Mockito.verify(mockStaticService).getServerConfiguration(issuer);
-		Mockito.verify(mockDynamicService, Mockito.never()).getServerConfiguration(Matchers.anyString());
+		Mockito.verify(mockDynamicService, Mockito.never()).getServerConfiguration(Mockito.anyString());
 		assertEquals(mockServerConfig, result);
 	}
 
@@ -93,9 +90,6 @@ public class TestHybridServerConfigurationService {
 	 */
 	@Test
 	public void getServerConfiguration_noIssuer() {
-
-		Mockito.when(mockStaticService.getServerConfiguration(issuer)).thenReturn(mockServerConfig);
-		Mockito.when(mockDynamicService.getServerConfiguration(issuer)).thenReturn(mockServerConfig);
 
 		String badIssuer = "www.badexample.com";
 
